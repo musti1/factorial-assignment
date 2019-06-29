@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+const program = require('commander')
+const app = require('../http/app')
+const config = require('../config/app')
+
+program
+  .version('0.0.1')
+  .description(config.appName)
+
+program
+  .command('start')
+  .alias('s')
+  .description('Start the web server')
+  .action(() => {
+    app.listen(config.port, () => console.log('Server Running'))
+  })
+
+program.parse(process.argv)

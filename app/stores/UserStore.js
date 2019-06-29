@@ -1,75 +1,65 @@
-const mongoose = require('../dbConnection/mongoConnection');
-const Users = require('./User');
+const userModel = require('../db/models/userModel')
+const User = require('./User')
 
-const userSchema = mongoose.Schema({
-    name: {type: String},
-    userId: {type: String},
-    password: {type: String},
-    emailId: {type:String}
-});
+class UserStore {
 
-const userModel = mongoose.model('users', userSchema);
-
-class UserStoreMongo {
-
-    /**
-     *
-     * @param emailId
-     * @param password
-     * @return {Promise<boolean|Array|*|Binary|{}|Map|Map>}
-     */
-    static async get(emailId, password) {
-        try {
-            const user = await userModel.findOne({emailId: emailId, password: password}).exec();
-            return user.toObject();
-        } catch (e) {
-            return false;
-        }
+  /**
+   *
+   * @param emailId
+   * @param password
+   * @return {Promise<User|boolean>}
+   */
+  static async findByEmailAndPass (emailId, password) {
+    try {
+      const user = await userModel.findOne({ emailId: emailId, password: password }).exec()
+      return User.createByObject(user)
+    } catch (e) {
+      return false
     }
+  }
 
-    /**
-     *
-     * @param user
-     * @return {Promise<boolean>}
-     */
-    static async add(user) {
-
-        try {
-            await userModel.create(user.toObject());
-            return true;
-        } catch (err) {
-            return false;
-        }
+  /**
+   *
+   * @param {User} user
+   * @return {Promise<User|boolean>}
+   */
+  static async add (user) {
+    try {
+      const userObj = await userModel.create(user.toObject())
+      return User.createByObject(userObj)
+    } catch (err) {
+      return false
     }
+  }
 
-    /**
-     *
-     * @param user
-     * @return {Promise<boolean>}
-     */
-    static async remove(user) {
-        try {
-            await userModel.findOneAndDelete({userId: user.userId}).exec();
-            return true;
-        } catch (err) {
-            return false;
-        }
+  /**
+   *
+   * @param {string} userId
+   * @return {Promise<boolean>}
+   */
+  static async remove (userId) {
+    try {
+      await userModel.findOneAndDelete({ userId }).exec()
+      return true
+    } catch (err) {
+      return false
     }
+  }
 
-    /**
-     *
-     * @param {Users} user
-     * @returns {Promise<boolean>}
-     */
-    static async update(user) {
-        try {
-            await userModel.findOneAndUpdate({userId: user.userId}, user.toObject()).exec();
-            return true;
-        } catch (err) {
-            return false;
-        }
+  /**
+   *
+   * @param {User} user
+   * @returns {Promise<boolean>}
+   */
+  static async update (user) {
+    try {
+      await userModel.findOneAndUpdate({ userId: user.userId }, user.toObject()).exec()
+      return true
+    } catch (err) {
+      return false
     }
+  }
 
 }
 
-module.exports = UserStoreMongo;
+module.exports = UserStore
