@@ -3,9 +3,9 @@ const UserService = require('../../services/UserService')
 class AuthController {
 
   static async signIn (req, res) {
-    const user = await UserService.getUser(req.body.email, req.body.password)
-    if (user) {
-      return res.json({ user, message: 'Sign In Successful' })
+    const User = await UserService.getUser(req.body.email, req.body.password)
+    if (User) {
+      return res.json({ User, message: 'Sign In Successful' })
     } else {
       return res.json({ error: 'Unable to login user' })
     }
