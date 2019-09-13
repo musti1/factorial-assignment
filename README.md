@@ -1,5 +1,5 @@
 # Factorial Assignment Backend
-
+This project will calculate the factorial using C++ Addons.
 Available Scripts
 In the project directory, you can run:
 
